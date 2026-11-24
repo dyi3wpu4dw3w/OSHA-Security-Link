@@ -5,80 +5,181 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>YOSHA LIVE</title>
+
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;background:#080d18;color:white;
- font-family:Arial;padding:20px;
- display:flex;justify-content:center;align-items:center;
- min-height:100vh
+* {
+    box-sizing: border-box;
 }
-.card{
- width:100%;max-width:550px;background:#131e32;
- padding:25px;border-radius:20px;text-align:center
+
+body {
+    margin: 0;
+    background: #080d18;
+    color: white;
+    font-family: Arial;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
-h1{color:#45d6ff}
-p{line-height:1.8;color:#c4d1e2}
-video{
- width:100%;background:#050912;
- border-radius:14px;margin-top:15px
+
+.card {
+    width: 100%;
+    max-width: 550px;
+    background: #131e32;
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
 }
-button{
- border:0;border-radius:10px;padding:14px;
- margin:8px;font-weight:bold;cursor:pointer
+
+h1 {
+    color: #45d6ff;
 }
-.start{background:#00c5eb}
-.stop{background:#ff5252;color:white}
-#status{color:#45d6ff}
+
+p {
+    line-height: 1.8;
+    color: #c4d1e2;
+}
+
+video {
+    width: 100%;
+    min-height: 220px;
+    background: #050912;
+    border-radius: 14px;
+    margin-top: 15px;
+}
+
+button {
+    border: 0;
+    border-radius: 10px;
+    padding: 14px;
+    margin: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.start {
+    background: #00c5eb;
+    color: #06121c;
+}
+
+.stop {
+    background: #ff5252;
+    color: white;
+}
+
+#status {
+    color: #45d6ff;
+    min-height: 24px;
+}
+
+.consent {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    text-align: right;
+    margin: 18px 0;
+    line-height: 1.7;
+}
 </style>
 </head>
+
 <body>
+
 <div class="card">
-<h1>YOSHA LIVE</h1>
-<h2>مشاركا</h2>
 
-<video id="camera" autoplay playsinline muted></video>
+    <h1>YOSHA LIVE</h1>
 
+    <h2>مشاركة الكاميرا بموافقتك</h2>
 
-<button class="start" onclick="startCamera()">
-بدء 
-</button>
+    <p>
+        لن تعمل الكاميرا إلا بعد موافقتك والضغط على زر البدء.
+        المعاينة في هذه النسخة تظهر على هذا الجهاز فقط.
+    </p>
+
+    <label class="consent">
+        <input type="checkbox" id="consent">
+        أوافق على تشغيل الكاميرا على هذا الجهاز،
+        وأعلم أن المعاينة محلية وليست بثاً مباشراً للمسؤول.
+    </label>
+
+    <button class="start" id="startBtn" type="button">
+        بدء الكاميرا
+    </button>
+
+    <button class="stop" id="stopBtn" type="button">
+        إيقاف الكاميرا
+    </button>
+
+    <p id="status" role="status" aria-live="polite">
+        الكاميرا متوقفة.
+    </p>
+
+    <video id="camera" autoplay playsinline muted></video>
 
 </div>
 
 <script>
 let stream = null;
 
-async function startCamera(){
- if(!document.getElementById("consent").checked){
-  alert("يرجى الموافقة أولاً");
-  return;
- }
+const consent = document.getElementById("consent");
+const video = document.getElementById("camera");
+const statusEl = document.getElementById("status");
 
- try{
-  stream = await navigator.mediaDevices.getUserMedia({
-   video:true,audio:false
-  });
+document.getElementById("startBtn").addEventListener("click", startCamera);
+document.getElementById("stopBtn").addEventListener("click", stopCamera);
 
-  document.getElementById("camera").srcObject=stream;
-  document.getElementById("status").textContent=
-   " تعمل.";
- }catch(error){
-  document.getElementById("status").textContent=
-   "تعذر تشغيل الكاميرا: "+error.name;
- }
+async function startCamera() {
+
+    if (!consent.checked) {
+        statusEl.textContent = "يرجى تحديد الموافقة أولاً.";
+        return;
+    }
+
+    if (!navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia) {
+
+        statusEl.textContent =
+            "المتصفح لا يدعم الكاميرا هنا. افتح الرابط في متصفح حديث عبر HTTPS.";
+        return;
+    }
+
+    try {
+
+        statusEl.textContent = "جارٍ طلب إذن الكاميرا...";
+
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false
+        });
+
+        video.srcObject = stream;
+        await video.play();
+
+        statusEl.textContent =
+            "الكاميرا تعمل على هذا الجهاز. لا يوجد بث إلى لوحة التحكم في هذه النسخة.";
+
+    } catch (error) {
+
+        statusEl.textContent =
+            "تعذر تشغيل الكاميرا: " + (error.name || "خطأ غير معروف");
+    }
 }
 
-function stopCamera(){
- if(stream){
-  stream.getTracks().forEach(track=>track.stop());
-  stream=null;
- }
- document.getElementById("camera").srcObject=null;
- document.getElementById("status").textContent=
-  "تم ";
+function stopCamera() {
+
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+    }
+
+    video.srcObject = null;
+    statusEl.textContent = "تم إيقاف الكاميرا.";
 }
+
+window.addEventListener("pagehide", stopCamera);
 </script>
+
 </body>
 </html>
 
