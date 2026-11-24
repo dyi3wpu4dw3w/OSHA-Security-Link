@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YOSHA Security</title>
+<style>
+body{
+ background:#080d18;color:white;font-family:Arial;
+ display:flex;align-items:center;justify-content:center;
+ min-height:100vh;margin:0;padding:20px
+}
+.card{
+ max-width:500px;width:100%;background:#131e32;
+ padding:30px;border-radius:18px;text-align:center
+}
+h1{color:#45d6ff}
+input{
+ width:90%;padding:13px;border-radius:8px;
+ border:1px solid #345;background:#202e45;
+ color:white;direction:ltr
+}
+button{
+ padding:13px 22px;background:#00bce8;
+ border:0;border-radius:8px;margin-top:15px;
+ font-weight:bold
+}
+a{color:#45d6ff}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>YOSHA SECURITY</h1>
+<h2>تم إنشاء رابط الاختبار</h2>
+<p>انسخ الرابط وافتحه في متصفحك لاختباره.</p>
+<input id="link" value="{{ url }}" readonly>
+<br>
+<button onclick="copyLink()">نسخ الرابط</button>
+<p id="message"></p>
+<a href="/">العودة إلى لوحة التحكم</a>
+</div>
+<script>
+function copyLink(){
+ const field=document.getElementById("link");
+ field.select();
+ navigator.clipboard.writeText(field.value)
+ .then(()=>document.getElementById("message").textContent="تم نسخ الرابط");
+}
+</script>
+</body>
+</html>

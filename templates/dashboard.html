@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YOSHA Security</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080d18;color:#fff;
+ font-family:Arial,sans-serif;padding:25px
+}
+.container{max-width:850px;margin:auto}
+header{text-align:center;padding:35px 10px}
+.logo{font-size:35px;font-weight:bold;color:#45d6ff}
+.subtitle{color:#9aabc5}
+.stats{display:flex;gap:15px;margin:20px 0}
+.card{
+ flex:1;background:#131e32;padding:22px;
+ border-radius:15px;text-align:center
+}
+.number{font-size:30px;color:#45d6ff}
+.panel{
+ background:#131e32;padding:25px;
+ border-radius:15px;margin-top:20px
+}
+input,button{
+ width:100%;padding:14px;border:0;
+ border-radius:9px;margin-top:12px;font-size:16px
+}
+input{background:#202e45;color:white}
+button{
+ background:#00bce8;color:#00121b;
+ font-weight:bold;cursor:pointer
+}
+a{color:#45d6ff}
+small{color:#aabbd2}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<div class="logo">YOSHA SECURITY</div>
+<p class="subtitle">Ethical Security Link Laboratory</p>
+</header>
+
+<div class="stats">
+<div class="card">
+<div class="number">{{ total }}</div>
+<small>عدد الروابط</small>
+</div>
+<div class="card">
+<div class="number">{{ visits }}</div>
+<small>عدد الزيارات</small>
+</div>
+</div>
+
+<div class="panel">
+<h2>إنشاء رابط اختبار جديد</h2>
+<form action="/create" method="POST">
+<input name="title" maxlength="80"
+placeholder="اسم الاختبار" required>
+<button type="submit">إنشاء الرابط</button>
+</form>
+</div>
+
+<div class="panel">
+<h2>الروابط المنشأة</h2>
+{% for token, item in links.items() %}
+<div>
+<strong>{{ item.title }}</strong>
+<p>الزيارات: {{ item.visits }}</p>
+<small>{{ item.created }}</small>
+<hr>
+</div>
+{% else %}
+<p>لا توجد روابط حتى الآن.</p>
+{% endfor %}
+</div>
+</div>
+</body>
+</html>
+

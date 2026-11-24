@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YOSHA LIVE CONTROL</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080d18;color:white;
+ font-family:Arial;padding:20px
+}
+.container{max-width:900px;margin:auto}
+header{text-align:center;padding:25px}
+h1{color:#45d6ff}
+.panel{
+ background:#131e32;padding:22px;
+ border-radius:16px;margin:15px 0
+}
+.session{
+ background:#202e45;padding:16px;
+ border-radius:12px;margin:12px 0
+}
+.status{color:#45d6ff;font-weight:bold}
+button{
+ background:#ff5252;color:white;
+ padding:12px 18px;border:0;
+ border-radius:9px;font-weight:bold
+}
+.empty{color:#aabbd2}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>YOSHA LIVE</h1>
+<p>لوحة إدارة جلسات الاختبار</p>
+</header>
+
+<div class="panel">
+<h2>جلسات الاختبار</h2>
+
+{% for session_id, session in sessions.items() %}
+<div class="session">
+<strong>رقم الجلسة:</strong>
+<p>{{ session_id }}</p>
+
+<p class="status">
+الحالة: {{ session.status }}
+</p>
+
+<p>وقت الإنشاء: {{ session.created }}</p>
+<p>المدة القصوى:غير محدودة</p>
+
+<form method="POST"
+action="/session/{{ session_id }}/stop">
+<button type="submit">إنهاء الجلسة</button>
+</form>
+</div>
+{% else %}
+<p class="empty">لا توجد جلسات حالياً.</p>
+{% endfor %}
+</div>
+</div>
+</body>
+</html>
+

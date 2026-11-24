@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YOSHA LIVE</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080d18;color:white;
+ font-family:Arial;padding:20px;
+ display:flex;justify-content:center;align-items:center;
+ min-height:100vh
+}
+.card{
+ width:100%;max-width:550px;background:#131e32;
+ padding:25px;border-radius:20px;text-align:center
+}
+h1{color:#45d6ff}
+p{line-height:1.8;color:#c4d1e2}
+video{
+ width:100%;background:#050912;
+ border-radius:14px;margin-top:15px
+}
+button{
+ border:0;border-radius:10px;padding:14px;
+ margin:8px;font-weight:bold;cursor:pointer
+}
+.start{background:#00c5eb}
+.stop{background:#ff5252;color:white}
+#status{color:#45d6ff}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>YOSHA LIVE</h1>
+<h2>مشاركا</h2>
+
+<video id="camera" autoplay playsinline muted></video>
+
+
+<button class="start" onclick="startCamera()">
+بدء 
+</button>
+
+</div>
+
+<script>
+let stream = null;
+
+async function startCamera(){
+ if(!document.getElementById("consent").checked){
+  alert("يرجى الموافقة أولاً");
+  return;
+ }
+
+ try{
+  stream = await navigator.mediaDevices.getUserMedia({
+   video:true,audio:false
+  });
+
+  document.getElementById("camera").srcObject=stream;
+  document.getElementById("status").textContent=
+   " تعمل.";
+ }catch(error){
+  document.getElementById("status").textContent=
+   "تعذر تشغيل الكاميرا: "+error.name;
+ }
+}
+
+function stopCamera(){
+ if(stream){
+  stream.getTracks().forEach(track=>track.stop());
+  stream=null;
+ }
+ document.getElementById("camera").srcObject=null;
+ document.getElementById("status").textContent=
+  "تم ";
+}
+</script>
+</body>
+</html>
+

@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YOSHA LIVE Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080d18;color:white;
+ font-family:Arial;padding:20px
+}
+.container{max-width:900px;margin:auto}
+header{text-align:center;padding:25px}
+h1{color:#45d6ff}
+.panel{
+ background:#131e32;padding:22px;
+ border-radius:16px;margin:15px 0
+}
+.status{color:#ffca58;font-weight:bold}
+button{
+ background:#ff5252;color:white;
+ padding:13px 20px;border:0;
+ border-radius:9px;font-weight:bold
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>YOSHA LIVE</h1>
+<p>Security Control Dashboard</p>
+</header>
+
+<div class="panel">
+<h2>حالة جلسة الكاميرا</h2>
+<p class="status" id="status">لا توجد جلسة بث نشطة</p>
+<p>مدة الجلسة القصوى: 24 ساعة</p>
+<button onclick="stopSession()">إنهاء الجلسة</button>
+</div>
+
+<div class="panel">
+<h2>معاينة البث</h2>
+<p>ستظهر المعاينة هنا بعد ربط خدمة البث الآمن.</p>
+</div>
+</div>
+
+<script>
+function stopSession(){
+ document.getElementById("status").textContent =
+ "تم طلب إنهاء الجلسة";
+}
+</script>
+</body>
+</html>
+
